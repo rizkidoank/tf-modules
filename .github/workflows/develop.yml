@@ -110,5 +110,8 @@ jobs:
       - run: pnpm exec nx affected -t tests --output-style stream
       - run: pnpm exec nx release --skip-publish --dry-run
         id: check_release
-      - run: echo "Run this"
+        continue-on-error: true
+      - run: echo "Run this when failure"
         if: ${{ steps.check_release.outcome == 'failure' }}
+      - run: echo "Run this when success"
+        if: ${{ steps.check_release.outcome == 'success' }}
