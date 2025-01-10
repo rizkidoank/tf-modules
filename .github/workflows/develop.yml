@@ -11,6 +11,7 @@ permissions:
   actions: read
 
 env:
+  HUSKY: 0
   TF_PLUGIN_CACHE_DIR: "${{ github.workspace}}/.terraform.d/plugin-cache"
 
 jobs:
