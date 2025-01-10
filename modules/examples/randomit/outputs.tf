@@ -3,5 +3,5 @@ output "greeting_sample_string" {
 }
 
 output "sample_random_integer" {
-  value = random_integer.example.result
+  value = random_integer.example[0].result
 }

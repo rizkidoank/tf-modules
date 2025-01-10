@@ -3,3 +3,9 @@ variable "sample_string" {
   default     = "hello world"
   type        = string
 }
+
+variable "module_enabled" {
+  description = "toggle to enable the module"
+  default     = true
+  type        = bool
+}

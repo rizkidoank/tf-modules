@@ -3,8 +3,9 @@ terraform {
 }
 
 resource "random_integer" "example" {
-  min = 1
-  max = 100
+  count = var.module_enabled ? 1 : 0
+  min   = 1
+  max   = 100
   keepers = {
     example = var.sample_string
   }
