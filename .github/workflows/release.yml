@@ -140,4 +140,7 @@ jobs:
         run: pnpm install
       - name: Derive appropriate SHAs for base and head for `nx affected` commands
         uses: nrwl/nx-set-shas@v4
-      - run: pnpm exec nx release --skip-publish
+      - run: pnpm exec nx release --skip-publish --dry-run
+        id: check_release
+      - run: echo "Run this"
+        if: ${{ steps.check_release.outcome == 'failure' }}
