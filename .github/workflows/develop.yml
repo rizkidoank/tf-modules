@@ -1,0 +1,110 @@
+name: develop
+on:
+  pull_request: 
+    types: [opened, synchronize, reopened]
+  push: 
+    branches: 
+      - develop
+
+permissions: 
+  contents: write
+  actions: read
+
+env:
+  TF_PLUGIN_CACHE_DIR: "${{ github.workspace}}/.terraform.d/plugin-cache"
+
+jobs:
+  init-validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Create terraform plugin cache dir
+        run: mkdir -p $TF_PLUGIN_CACHE_DIR
+      - name: Cache terraform plugins
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.TF_PLUGIN_CACHE_DIR }}
+          key: ${{ runner.os }}-terraform-${{ hashFiles('**/.terraform.lock.hcl') }}
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm install
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+          terraform_version: '1.10.3'
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        uses: nrwl/nx-set-shas@v4
+      - run: pnpm exec nx affected -t fmt --output-style stream
+      - run: pnpm exec nx affected -t init --output-style stream
+      - run: pnpm exec nx affected -t validate --output-style stream
+  tests:
+    needs: [init-validate]
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Create terraform plugin cache dir
+        run: mkdir -p $TF_PLUGIN_CACHE_DIR
+      - name: Cache terraform plugins
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.TF_PLUGIN_CACHE_DIR }}
+          key: ${{ runner.os }}-terraform-${{ hashFiles('**/.terraform.lock.hcl') }}
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm install
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+          terraform_version: '1.10.3'
+      - name: Install tflint
+        uses: terraform-linters/setup-tflint@v4
+      - name: Install Trivy
+        uses: aquasecurity/setup-trivy@v0.2.2
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        uses: nrwl/nx-set-shas@v4
+      - run: pnpm exec nx affected -t init --output-style stream
+      - run: pnpm exec nx affected -t plan --output-style stream
+      - run: pnpm exec nx affected -t trivy --output-style stream
+      - run: pnpm exec nx affected -t tests --output-style stream
