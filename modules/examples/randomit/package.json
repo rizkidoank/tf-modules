@@ -8,7 +8,7 @@
       "init": "terraform init",
       "plan": "terraform plan --out tfplan > tfplan.json",
       "trivy": "trivy config tfplan.json",
-      "test": "terraform test"
+      "tests": "terraform test"
     },
     "author": "Rizki",
     "license": "MIT",

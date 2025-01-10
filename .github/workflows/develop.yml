@@ -59,6 +59,7 @@ jobs:
       - run: pnpm exec nx affected -t init --output-style stream
       - run: pnpm exec nx affected -t validate --output-style stream
   tests:
+    needs: [init-validate]
     name: Tests
     runs-on: ubuntu-latest
     steps:
