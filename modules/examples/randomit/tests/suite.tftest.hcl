@@ -16,7 +16,7 @@ run "sample_test" {
   }
 
   assert {
-    condition = output.greeting_sample_string == "Hello ${var.sample_string}"
+    condition     = output.greeting_sample_string == "Hello ${var.sample_string}"
     error_message = "Invalid greeting output"
   }
 }
