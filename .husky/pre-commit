@@ -1,0 +1,7 @@
+nx affected -t fmt
+nx affected -t init
+nx affected -t validate
+nx affected -t lint
+nx affected -t plan
+nx affected -t trivy
+nx affected -t tests
