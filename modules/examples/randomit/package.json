@@ -1,16 +1,16 @@
 {
-    "name": "examples-randomit",
-    "version": "0.0.0",
-    "scripts": {
-      "fmt": "terraform fmt -check -diff",
-      "validate": "terraform validate",
-      "lint": "tflint",
-      "init": "terraform init",
-      "plan": "terraform plan --out tfplan > tfplan.json",
-      "trivy": "trivy config tfplan.json",
-      "tests": "terraform test"
-    },
-    "author": "Rizki",
-    "license": "MIT",
-    "private": true
-  }
+  "name": "examples-randomit",
+  "version": "0.1.0",
+  "scripts": {
+    "fmt": "terraform fmt -check -diff",
+    "validate": "terraform validate",
+    "lint": "tflint",
+    "init": "terraform init",
+    "plan": "terraform plan --out tfplan > tfplan.json",
+    "trivy": "trivy config tfplan.json",
+    "tests": "terraform test"
+  },
+  "author": "Rizki",
+  "license": "MIT",
+  "private": true
+}
